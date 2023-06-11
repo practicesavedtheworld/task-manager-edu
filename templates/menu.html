@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="static/css/menu.css">
+    <meta charset="UTF-8">
+    <title>menu</title>
+</head>
+<body>
+
+<div class="main_container">
+
+    <div class="navigation">
+        <span id="current_user" style="font-size: larger; font-family: C059, monospace">USER - {{user}}</span>
+        <div id="Mtask"><span>My tasks</span></div>
+        <div id="CTask"><span>Finished tasks</span></div>
+        <div id="Rtask"><span>Retired tasks</span></div>
+    </div>
+
+    <div class="task_content">
+        <div id="task_operations">
+            <span id="add_task"><img src="/static/img/add.svg" alt="My SVG" height="40" width="40"></span>
+            <span id='edit_task'><img src="/static/img/edit.svg" alt="EDIT BUTTON" height="40" width="40"></span>
+            <span id="remove_task"><img src="/static/img/remove.svg" alt="remove button" height="40" width="40"></span>
+
+        </div>
+        <div id="task_info">
+            <table id="task_table" style="width: 100%;">
+                <tr>
+                    <td>Task name</td>
+                    <td>Category</td>
+                    <td>Timeout</td>
+                    <td>Priority</td>
+                </tr>
+                {{tasks}}
+
+            </table>
+
+        </div>
+    </div>
+</div>
+
+<script src="js/menu.js"></script>
+</body>
+</html>

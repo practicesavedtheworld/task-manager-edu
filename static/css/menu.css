@@ -1,0 +1,97 @@
+.main_container {
+    display: flex;
+    height: 80%;
+    padding: 10px;
+}
+
+.navigation {
+    margin-top: 40px;
+    width: 25%;
+    min-width: 210px;
+    border-right: 1px solid #7f9592;
+    border-radius: 4px;
+    font-size: 20px;
+    text-align: center;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+
+.task_content {
+    margin-top: 20px;
+    width: 72%;
+    margin-left: 30px;
+    order: 1;
+    min-width: 300px;
+    /*border: 1px solid darkblue;*/
+    border-radius: 40px;
+
+}
+
+tr {
+    height: 50px;
+}
+
+/*#task_operations {*/
+/*    border: 1px solid black;*/
+/*    border-right: none;*/
+/*    border-radius: 0px;*/
+/*}*/
+
+tbody {
+    background-color: #b2a2a2;
+    font-family: C059, monospace;
+    font-size: 20px;
+}
+
+#task_table, td, th {
+
+    text-align: center;
+    border: 6px solid black;
+}
+
+td {
+    border: 2px solid #626262;
+}
+
+#task_info {
+    margin-top: 20px;
+    /*border: 2px solid darkgreen;*/
+    border-radius: 20px;
+}
+
+#add_task, #remove_task, #edit_task {
+    margin: 20px;
+}
+
+#current_user, #CTask, #Rtask, #Mtask {
+    height: 55px;
+    width: 160px;
+    padding: 22px;
+    margin: 20px;
+    text-align: center;
+    display: inline-block;
+    justify-content: center;
+    align-items: center;
+    line-height: 50px;
+}
+
+
+#CTask, #Rtask, #Mtask {
+    border: 3px solid black;
+    border-radius: 25px;
+}
+
+#CTask {
+    background-color: aquamarine;
+}
+
+#Mtask {
+    background-color: cornflowerblue;
+}
+
+#Rtask {
+    background-color: #e29999;
+}
+

@@ -36,16 +36,16 @@ async def add_task(request: Request) -> Response:
             VALUES ($1, $2, $3, $4, $5, $6)"""
             start_time = datetime.now()
             preend_time = start_time + timedelta(hours=int(timeout))
-            end_time : float = (preend_time - start_time).total_seconds()
+            end_time: float = (preend_time - start_time).total_seconds()
             print('DOBAVIL', start_time.time(), end_time)
             record = await connection.fetchrow(push_query, user_id, name, category, str(start_time.time()),
                                                str(end_time), priority)
     raise web.HTTPFound(location='/menu')
 
 
-async def edit_status(request: Request):
+async def edit_status(request: Request) -> Response:
+    """Receive task info and change status in DB into 'done'. It means task had been finished."""
     data = await request.json()
-    # print("EDIT_STATUS", data)
     name, category, priority = [data.get(row) for row in data.keys()]
     db: asyncpg.Pool = request.app['db']
     async with db.acquire() as connection:
@@ -63,10 +63,9 @@ async def edit_status(request: Request):
     return web.Response()
 
 
-async def edit(request: Request):
-    """
+async def edit(request: Request) -> Response:
+    """Receive info about task if task status is not 'done'. Rewrites task fields based on users desire."""
 
-    """
     data = await request.json()
     # print("EDIT", data)
     previous_task, name, category, timeout, priority = [data.get(row) for row in data.keys()]
@@ -85,14 +84,14 @@ async def edit(request: Request):
             start = datetime.now()
             preend = start + timedelta(hours=int(timeout))
             end = (preend - start).total_seconds()
-            res = await connection.execute(
+            await connection.execute(
                 put_query, pr_name, pr_category,
                 pr_priority, user_id, name,
                 category, str(end), priority, str(start.time()))
     return web.Response()
 
 
-async def remove_task(request: Request):
+async def remove_task(request: Request) -> Response:
     data = await request.json()
     session = await get_session(request)
     user_name = session['user_name']

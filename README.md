@@ -13,3 +13,11 @@ Python 3.7+
 
 https://github.com/practicesavedtheworld/task-manager-edu/assets/105741091/661adb7a-f2be-4fd1-9117-07d9d7691db6
 
+
+
+##  INFO
+
+I chose simple relation between user and his tasks using postgreSQL database.
+
+![database_taskmanager](https://github.com/practicesavedtheworld/task-manager-edu/assets/105741091/7cea0fac-97d2-4053-ad1e-aec4daaac6a2)
+

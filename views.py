@@ -5,7 +5,7 @@ import aiohttp_jinja2
 import asyncpg
 from aiohttp.web import Request, Response
 from aiohttp import web
-from aiohttp_session import get_session
+from aiohttp_session import get_session, Session
 
 
 @aiohttp_jinja2.template('index.html')
@@ -169,14 +169,14 @@ async def new_user(request: Request) -> Optional[Response]:
 
 
 @aiohttp_jinja2.template('menu.html')
-async def menu(request: Request):
+async def menu(request: Request) -> dict[str, Session]:
     """Create session for every user"""
 
     session = await get_session(request)
     return {'user': session['user_name']}
 
 
-async def go(request: Request):
+async def go(request: Request) -> Optional[Response]:
     """Validate user info and redirect into main menu"""
 
     data = await request.post()
@@ -192,5 +192,5 @@ async def go(request: Request):
             if record:
                 session = await get_session(request)
                 session['user_name'] = record[0]['user_name']
-                raise web.HTTPFound(location='/menu')
+                return web.HTTPFound(location='/menu')
             raise web.HTTPNotFound()

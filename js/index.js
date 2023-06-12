@@ -137,8 +137,8 @@ let logBtn = document.getElementById('logBtn');
 let new_user = document.getElementById('new_user');
 
 let loginRect = logBtn.getBoundingClientRect();
-let leftOffset = loginRect.left + loginRect.width + 20;
+let leftOffset = loginRect.left + loginRect.width - 48;
 
 new_user.style.position = 'absolute';
 new_user.style.left = leftOffset + 'px';
-new_user.style.top = loginRect.top - 5 + 'px';
+new_user.style.top = loginRect.top - 55 + 'px';

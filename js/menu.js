@@ -34,7 +34,6 @@ function customizeModalElement(element) {
 function createTimeout(seconds) {
     const timerElement = document.createElement('div');
     timerElement.classList.add('timer');
-    // taskTableChildren[i].appendChild(timerElement);
 
     let remainingTime = seconds; // Turn hours to seconds
     let timerInterval = setInterval(() => {
@@ -43,10 +42,8 @@ function createTimeout(seconds) {
         const seconds = remainingTime % 60;
         timerElement.textContent = `${hours}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
 
-        // Обновляем оставшееся время
         remainingTime--;
 
-        // Если таймер закончился, очищаем интервал
         if (remainingTime < 0) {
             clearInterval(timerInterval);
         }
@@ -328,8 +325,7 @@ const editTask = () => {
                         modalEdit.remove();
                         break
                     } else if (status.toLowerCase() === 'done') {
-                        // taskCells[0].style.backgroundColor = '#aeffd4';
-                        //
+
                         for (let j = 0; j < taskCells.length; j++) {
 
                             for (let k = 0; k < taskCells.length; k++) {

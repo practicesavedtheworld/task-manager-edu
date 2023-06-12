@@ -109,7 +109,9 @@ newUserCreating.addEventListener('click', () => {
             body: JSON.stringify(ffData)
         }).then(response => response.json())
             .then(data => {
-                console.log(data);
+                if (data.status === false) {
+                    alert('That login reserved');
+                }
             })
             .catch(err => console.error(err))
     })

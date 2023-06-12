@@ -121,7 +121,6 @@ const addTaskForm = () => {
             let taskPriority = document.createElement('td');
             const f = new FormData(htmlForm);
             const ff = Object.fromEntries(f);
-            console.log(JSON.stringify(ff))
             fetch('/add', {
                 method: 'post',
                 headers: {
@@ -197,7 +196,6 @@ function validateFormFields(formObj) {
         input.style.backgroundColor = '#eea9a9';
         setTimeout(() => input.style.backgroundColor = '', 2500);
     }
-    console.log(formObj);
     for (let key of Object.keys(formObj)) {
         switch (key) {
             case 'Timeout':
@@ -238,7 +236,6 @@ function removeTaskButtonHandler() {
 function editTaskButtonHandler() {
     let edit = document.querySelector('.task_content #task_operations #edit_task');
     edit.addEventListener('click', () => {
-        console.log("EDIT CLICK")
         editTask();
     })
 }
@@ -318,7 +315,6 @@ const editTask = () => {
             const taskTableChildren = document.querySelector('#task_table').children;
             for (let i = taskTableChildren.length - 1; i > 0; i--) {
                 if (taskTableChildren[i].classList.contains('selected')) {
-                    console.log("i", i)
                     // Values from form fields
                     const name = nameInput.value;
                     const category = categoryInput.value;
@@ -328,7 +324,6 @@ const editTask = () => {
 
                     // Get all cells of row
                     const taskCells = taskTableChildren[i].children;
-                    console.log("CELLS", taskCells[0], taskCells[1], taskCells[3])
                     if (!validateEditFormField(name, category, timeout, priority) && status.toLowerCase() !== 'done') {
                         modalEdit.remove();
                         break
@@ -338,7 +333,6 @@ const editTask = () => {
                         for (let j = 0; j < taskCells.length; j++) {
 
                             for (let k = 0; k < taskCells.length; k++) {
-                                console.log("CLASS", taskTableChildren[i].className)
                                 taskTableChildren[i].className = '';
                                 taskTableChildren[i].style.backgroundColor = '';
                                 taskCells[k].style.backgroundColor = '#aeffd4';
@@ -498,7 +492,6 @@ const taskSelectionHandler = () => {
     taskTable.addEventListener('click', (event) => {
         const targetRow = event.target.closest('tr');
         const targetName = event.target;
-        console.log(targetRow, 'TARGET NAME', targetName);
 
         if (!targetRow || targetRow === taskTable.rows[0]) {
             sortBy(targetName);
@@ -525,7 +518,6 @@ function myTasksButtonHandler() {
 
 
     myTasksButton.addEventListener('click', event => {
-        console.log('MTASK CLICKED');
         fetch('/my_tasks', {
             method: 'GET'
         }).then(resp => {
@@ -543,16 +535,13 @@ function finishedTasksButtonHandler() {
 
 
     finishedTasksButton.addEventListener('click', event => {
-        console.log('FinTask clicked');
         fetch('/finished_tasks', {
             method: 'GET'
         }).then(response => response.json())
             .then(data => {
 
-                console.log(data)
                 let taskTable = document.querySelector('#task_table');
                 let taskTableChildren = taskTable.children;
-                console.log(taskTableChildren);
 
                 // Deletes all tr elementts except tbody
                 for (let i = taskTableChildren.length - 1; i > 0; i--) {
@@ -563,7 +552,6 @@ function finishedTasksButtonHandler() {
                     let tr = document.createElement('tr');
                     tr.style.backgroundColor = '#7fffd4';
                     for (let [key, value] of Object.entries(obj)) {
-                        console.log("FIN", key, value)
                         if (key !== 'status') {
                             let td = document.createElement('td');
                             if (key === 'end_time') {
@@ -588,7 +576,6 @@ function retiredTasksButtonHandler() {
     const retiredTasksButton = document.querySelector('.navigation [id=Rtask]');
     mouseMovementHandler(retiredTasksButton, 'gray');
     retiredTasksButton.addEventListener('click', event => {
-        console.log('Rtask CLICKER');
     })
 
 
@@ -616,15 +603,14 @@ async function menuHandler() {
     xhr.onreadystatechange = function () {
         if (xhr.readyState === 4 && xhr.status === 200) {
             const data = JSON.parse(xhr.responseText); // Array[Obj...]
-            console.log(data.text, data);
             let taskTable = document.querySelector('#task_table');
+
             for (let obj of data) {
                 let tr = document.createElement('tr');
                 let timerStr;  // Need to wait microseconds before timer is setting up. Can't get it in real-time
+
                 for (let [k, v] of Object.entries(obj)) {
-
                     if (k !== 'status') {
-
                         let td = document.createElement('td');
                         if (k === 'end_time') {
                             timerStr = v;
@@ -643,6 +629,7 @@ async function menuHandler() {
                 }
                 taskTable.appendChild(tr);
             }
+            // As soon as we in menu start all handlers
             addTaskButtonHandler();
             editTaskButtonHandler();
             taskSelectionHandler();
@@ -653,8 +640,6 @@ async function menuHandler() {
         }
     };
     xhr.send(form);
-
-
 }
 
 menuHandler()

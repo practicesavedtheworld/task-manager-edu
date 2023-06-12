@@ -1,3 +1,4 @@
+from typing import Optional
 from datetime import datetime, timedelta
 
 import aiohttp_jinja2
@@ -12,23 +13,22 @@ async def login(request: Request) -> dict:
     return {}
 
 
-async def my_tasks(request: Request):
+async def my_tasks(request: Request) -> Response:
     return web.HTTPFound(location='/menu')
 
 
-async def add_task(request: Request) -> Response:
-    """
+async def add_task(request: Request) -> Optional[Response]:
+    """Receives a form from the client and puts it into the database"""
 
-    """
     data = await request.post()
-    print('ADD TASK', data)
-    session = await get_session(request)
-    user_name = session['user_name']
     name, category, timeout, priority = [data.get(row) for row in data.keys()]
-    # # return {'status': 't'}
     db: asyncpg.Pool = request.app['db']
     async with db.acquire() as connection:
         async with connection.transaction():
+            session = await get_session(request)
+            user_name = session['user_name']
+            if user_name is None:
+                return web.HTTPNotFound()
             user_id_query = "SELECT user_id FROM users WHERE user_name = $1;"
             user_id = await connection.fetchval(user_id_query, user_name)
             push_query = """
@@ -37,14 +37,14 @@ async def add_task(request: Request) -> Response:
             start_time = datetime.now()
             preend_time = start_time + timedelta(hours=int(timeout))
             end_time: float = (preend_time - start_time).total_seconds()
-            print('DOBAVIL', start_time.time(), end_time)
-            record = await connection.fetchrow(push_query, user_id, name, category, str(start_time.time()),
-                                               str(end_time), priority)
+            await connection.fetchrow(push_query, user_id, name, category, str(start_time.time()),
+                                      str(end_time), priority)
     raise web.HTTPFound(location='/menu')
 
 
 async def edit_status(request: Request) -> Response:
     """Receive task info and change status in DB into 'done'. It means task had been finished."""
+
     data = await request.json()
     name, category, priority = [data.get(row) for row in data.keys()]
     db: asyncpg.Pool = request.app['db']
@@ -67,7 +67,6 @@ async def edit(request: Request) -> Response:
     """Receive info about task if task status is not 'done'. Rewrites task fields based on users desire."""
 
     data = await request.json()
-    # print("EDIT", data)
     previous_task, name, category, timeout, priority = [data.get(row) for row in data.keys()]
     db: asyncpg.Pool = request.app['db']
     async with db.acquire() as connection:
@@ -87,11 +86,14 @@ async def edit(request: Request) -> Response:
             await connection.execute(
                 put_query, pr_name, pr_category,
                 pr_priority, user_id, name,
-                category, str(end), priority, str(start.time()))
+                category, str(end), priority, str(start.time()),
+            )
     return web.Response()
 
 
 async def remove_task(request: Request) -> Response:
+    """Delete task selected by user from DB"""
+
     data = await request.json()
     session = await get_session(request)
     user_name = session['user_name']
@@ -111,9 +113,9 @@ async def remove_task(request: Request) -> Response:
 
 
 async def user_tasks(request: Request) -> Response:
-    """
+    """Depend on method returns all current tasks or completed tasks.
+    GET returns completed, POST return all tasks."""
 
-    """
     method = request.method
     session = await get_session(request)
     user = session.get('user_name')
@@ -129,7 +131,6 @@ async def user_tasks(request: Request) -> Response:
                 WHERE users.user_name = $1;
             """
                 tasks = await connection.fetch(tasks_query, user)
-                [print(i) for i in tasks]
 
             elif method == 'GET':
                 fin_tasks_query = """
@@ -138,20 +139,23 @@ async def user_tasks(request: Request) -> Response:
                 JOIN users ON users.user_id = current_tasks.user_id
                 WHERE users.user_name = $1 AND current_tasks.status = $2;"""
                 tasks = await connection.fetch(fin_tasks_query, user, 'done')
-                [print(i) for i in tasks]
             tasks_json = [{k: v for k, v in t.items()} for t in tasks]
-            print(tasks_json)
 
     return web.json_response(tasks_json)
 
 
-async def new_user(request: Request):
+async def new_user(request: Request) -> Optional[Response]:
+    """User registration process"""
+
     data = await request.post()
     user_login, password = data.get('login'), data.get('password')
-    # print('NEW USER', data)
     pool: asyncpg.Pool = request.app['db']
     async with pool.acquire() as connection:
         async with connection.transaction():
+            is_user_in_db_query = """SELECT user_name FROM users WHERE user_name = $1;"""
+            is_user_in_db = await connection.fetch(is_user_in_db_query, user_login)
+            if is_user_in_db:
+                return web.json_response({'status': False})
             add_user_query = """INSERT INTO users (user_name, user_password) VALUES ($1, $2)"""
             await connection.fetch(add_user_query, user_login, password)
             current_user_query = """SELECT user_name FROM users WHERE user_name = $1 AND user_password = $2;"""
@@ -166,21 +170,25 @@ async def new_user(request: Request):
 
 @aiohttp_jinja2.template('menu.html')
 async def menu(request: Request):
+    """Create session for every user"""
+
     session = await get_session(request)
     return {'user': session['user_name']}
 
 
-async def another(request: Request):
+async def go(request: Request):
+    """Validate user info and redirect into main menu"""
+
     data = await request.post()
-    # print("ANOTHER", data)
     user_login, password = data.get('login'), data.get('password')
     pool: asyncpg.Pool = request.app['db']
     async with pool.acquire() as connection:
         async with connection.transaction():
-            current_tasks_query = """SELECT user_name, user_password FROM users
+            current_tasks_query = """
+            SELECT user_name, user_password 
+            FROM users
             WHERE user_name = $1 AND user_password = $2;"""
             record = await connection.fetch(current_tasks_query, user_login, password)
-            # [print(i) for i in record]
             if record:
                 session = await get_session(request)
                 session['user_name'] = record[0]['user_name']

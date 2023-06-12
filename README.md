@@ -11,6 +11,5 @@ Python 3.7+
 ## Quick DEMO
 
 
-
-https://github.com/practicesavedtheworld/task-manager-edu/assets/105741091/71fa10a1-aed7-48d3-8f7b-95bb16f98fe0
+https://github.com/practicesavedtheworld/task-manager-edu/assets/105741091/661adb7a-f2be-4fd1-9117-07d9d7691db6
 

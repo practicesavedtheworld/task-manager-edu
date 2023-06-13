@@ -45,5 +45,5 @@ $ pip install -r requirements.txt
 
 $ python3 main.py</code></pre>
 
-Open http://0.0.0.0:8080 in browser (Make sure your port 8888 is open)
+Open http://0.0.0.0:8888 in browser (Make sure your port 8888 is open)
 Use it

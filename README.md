@@ -17,7 +17,14 @@ https://github.com/practicesavedtheworld/task-manager-edu/assets/105741091/661ad
 
 ##  INFO
 
-I chose simple relation between user and his tasks using postgreSQL database.
+I chose simple relation between user and his tasks using postgreSQL.
 
 ![database_taskmanager](https://github.com/practicesavedtheworld/task-manager-edu/assets/105741091/7cea0fac-97d2-4053-ad1e-aec4daaac6a2)
 
+Task manager has 3 buttons for showing current tasks, retired tasks and completed tasks. Also it has buttons for add, remove, edit tasks.
+
+Each tasks contained in table which supports sorting by column clicked 
+![tm](https://github.com/practicesavedtheworld/task-manager-edu/assets/105741091/17697c50-f8a3-427a-bd85-dfd51d10bd9c)
+
+
+## USAGE

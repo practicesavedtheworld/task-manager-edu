@@ -28,3 +28,22 @@ Each tasks contained in table which supports sorting by column clicked
 
 
 ## USAGE
+
+### Create database
+
+<pre><code>$ psql -U postgres -h localhost
+> CREATE DATABASE tmusers;</code></pre>
+
+### Using
+
+
+<pre><code>$ git clone https://github.com/practicesavedtheworld/task-manager-edu
+
+$ cd task-manager-edu
+
+$ pip install -r requirements.txt
+
+$ python3 main.py</code></pre>
+
+Open http://0.0.0.0:8080 in browser (Make sure your port 8888 is open)
+Use it

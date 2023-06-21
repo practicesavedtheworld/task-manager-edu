@@ -50,4 +50,4 @@ Use it
 
 ### USING WITH DOCKER
 <pre><code>$ docker build -t task-manager-edu .
-$ docker run -p 8000:8000 task-manager<pre><code>
+$ docker run -p 8000:8888 task-manager<pre><code>

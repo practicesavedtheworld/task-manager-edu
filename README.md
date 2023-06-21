@@ -47,3 +47,7 @@ $ python3 main.py</code></pre>
 
 Open http://0.0.0.0:8888 in browser (Make sure your port 8888 is open)
 Use it
+
+### USING WITH DOCKER
+<pre><code>$ docker build -t task-manager-edu .
+$ docker run -p 8000:8000 task-manager<pre><code>
